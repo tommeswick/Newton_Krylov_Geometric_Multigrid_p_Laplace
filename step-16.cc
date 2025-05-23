@@ -465,7 +465,7 @@ template <int dim>
 
     unsigned max_no_refinement_cycles;
     unsigned int max_obtained_no_newton_steps;
-    double lower_bound_newton_residuum, lower_bound_linear_solver;
+    double lower_bound_newton_residual, lower_bound_linear_solver;
 
     int number_of_linear_iterations, min_number_of_linear_iterations, 
       max_number_of_linear_iterations;
@@ -558,7 +558,7 @@ void LaplaceProblem<dim>::set_runtime_parameters_example_1 ()
 
 
   // Tolerances for nonlinear and linear solver
-  lower_bound_newton_residuum = 1.0e-10; 
+  lower_bound_newton_residual = 1.0e-10; 
   lower_bound_linear_solver   = 1.0e-12;
 
   // Initializations (modified during computation)
@@ -621,7 +621,7 @@ void LaplaceProblem<dim>::set_runtime_parameters_example_2 ()
 
 
   // Tolerances for nonlinear and linear solver
-  lower_bound_newton_residuum = 1.0e-10; // TODO: 1.0e-10
+  lower_bound_newton_residual = 1.0e-10; // TODO: 1.0e-10
   lower_bound_linear_solver   = 1.0e-12;
 
   // Initializations (modified during computation)
@@ -684,7 +684,7 @@ void LaplaceProblem<dim>::set_runtime_parameters_example_3 ()
 
 
   // Tolerances for nonlinear and linear solver
-  lower_bound_newton_residuum = 1.0e-10; 
+  lower_bound_newton_residual = 1.0e-10; 
   lower_bound_linear_solver   = 1.0e-12;
 
   // Initializations (modified during computation)
@@ -1592,46 +1592,46 @@ void LaplaceProblem<dim>::newton_iteration ()
   unsigned int line_search_step;
   //const unsigned int  max_no_line_search_steps = 0;//100;
   const double line_search_damping = 0.6;
-  double new_newton_residuum;
+  double new_newton_residual;
   
   // Application of the initial boundary conditions to the 
   // variational equations:
   set_initial_bc ();
   assemble_system_rhs();
 
-  double newton_residuum = system_rhs.linfty_norm(); 
-  double old_newton_residuum= newton_residuum;
-  double initial_newton_residuum = newton_residuum;
+  double newton_residual = system_rhs.linfty_norm(); 
+  double old_newton_residual= newton_residual;
+  double initial_newton_residual = newton_residual;
   unsigned int newton_step = 1;
 
   unsigned int stop_when_line_search_two_times_max_number = 0;
   
   max_obtained_no_newton_steps = newton_step;
 
-  if (newton_residuum < lower_bound_newton_residuum)
+  if (newton_residual < lower_bound_newton_residual)
     {
       std::cout << '\t' 
 		<< std::scientific 
-		<< newton_residuum 
+		<< newton_residual 
 		<< std::endl;     
     }
   
-  while ((newton_residuum > lower_bound_newton_residuum &&
-	  (newton_residuum/initial_newton_residuum) > lower_bound_newton_residuum) &&
+  while ((newton_residual > lower_bound_newton_residual &&
+	  (newton_residual/initial_newton_residual) > lower_bound_newton_residual) &&
 	 newton_step < max_no_newton_steps)
     {
       timer_newton.start();
-      old_newton_residuum = newton_residuum;
+      old_newton_residual = newton_residual;
       
       assemble_system_rhs();
-      newton_residuum = system_rhs.linfty_norm();
+      newton_residual = system_rhs.linfty_norm();
 
-      if (newton_residuum < lower_bound_newton_residuum)
+      if (newton_residual < lower_bound_newton_residual)
 	{
 	  max_obtained_no_newton_steps = newton_step - 1;
 	  std::cout << '\t' 
 		    << std::scientific 
-		    << newton_residuum << std::endl;
+		    << newton_residual << std::endl;
 	  break;
 	}
   
@@ -1639,7 +1639,7 @@ void LaplaceProblem<dim>::newton_iteration ()
       // but not used because I am not
       // sure how the multigrid assembly will be affected
       // when the matrix is not re-build
-      //if (newton_residuum/old_newton_residuum > nonlinear_rho)
+      //if (newton_residual/old_newton_residual > nonlinear_rho)
 	assemble_system_matrix ();
 	assemble_multigrid ();
 
@@ -1655,9 +1655,9 @@ void LaplaceProblem<dim>::newton_iteration ()
 	  solution += newton_update;
 	  
 	  assemble_system_rhs ();			
-	  new_newton_residuum = system_rhs.linfty_norm();
+	  new_newton_residual = system_rhs.linfty_norm();
 	  
-	  if (new_newton_residuum < newton_residuum)
+	  if (new_newton_residual < newton_residual)
 	      break;
 	  else 	  
 	    solution -= newton_update;
@@ -1686,9 +1686,9 @@ void LaplaceProblem<dim>::newton_iteration ()
       time_for_Newton_current_mesh += timer_newton.cpu_time ();
       
       std::cout << std::setprecision(5) <<newton_step << '\t' 
-		<< std::scientific << newton_residuum << '\t'
-		<< std::scientific << newton_residuum/old_newton_residuum  <<'\t' ;
-      if (newton_residuum/old_newton_residuum > nonlinear_rho)
+		<< std::scientific << newton_residual << '\t'
+		<< std::scientific << newton_residual/old_newton_residual  <<'\t' ;
+      if (newton_residual/old_newton_residual > nonlinear_rho)
 	std::cout << "r" << '\t' ;
       else 
 	std::cout << " " << '\t' ;
@@ -1715,8 +1715,8 @@ void LaplaceProblem<dim>::newton_iteration ()
       if (bool_use_modified_Newton)
 	{
 	  // Update delta for dynamic switch between fixed point and Newton
-	  double Qn = newton_residuum/old_newton_residuum;
-	  double Qn_inv = old_newton_residuum/newton_residuum;
+	  double Qn = newton_residual/old_newton_residual;
+	  double Qn_inv = old_newton_residual/newton_residual;
 	  
 	  delta_fixed_point_newton = delta_fixed_point_newton * (a_fp/(std::exp(Qn_inv)) + b_fp/(std::exp(Qn)));
 
@@ -2216,7 +2216,7 @@ void LaplaceProblem<dim>::integrate_difference_F_norm
 	      << alpha_eps << "\t" 
 	      << power_p << "\t"
 	      << lower_bound_linear_solver << "\t\t"
-	      << lower_bound_newton_residuum 
+	      << lower_bound_newton_residual 
 	      << std::endl;
     std::cout << "Info:  " <<  std::endl;
     //std::cout << "Info: Cells\tDoFs\th\t\tF-norm err\tConvRate\tMin/MaxLinIter\tNewton iter" << std::endl;
