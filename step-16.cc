@@ -383,10 +383,10 @@ template <int dim>
     void newton_iteration();
 
     // Non-homogeneous Dirichlet conditions for the initial Newton solution
-    void set_initial_bc ();
+    void set_bc_in_initial_newton_guess ();
 
     // Not used here - initialized directly in setup_system ();
-    void set_newton_bc ();
+    void set_bc_in_subsequent_newton_iter ();
  
     // Heuristic mesh refinement - not used currently for the p-Laplace problem
     void refine_grid ();
@@ -1364,10 +1364,10 @@ void LaplaceProblem<dim>::set_runtime_parameters_example_3 ()
 // boundary conditions for the first Newton iterate.
 // After the first iteration, all non-homogeneous Dirichlet 
 // conditions must be set to homogeneous conditions, which 
-// is achieved in the function set_newton_bc()
+// is achieved in the function set_bc_in_subsequent_newton_iter()
 template <int dim>
 void
-LaplaceProblem<dim>::set_initial_bc ()
+LaplaceProblem<dim>::set_bc_in_initial_newton_guess ()
 { 
   //std::map<unsigned int,double> boundary_values;
   std::map<types::global_dof_index,double> boundary_values;  
@@ -1596,7 +1596,7 @@ void LaplaceProblem<dim>::newton_iteration ()
   
   // Application of the initial boundary conditions to the 
   // variational equations:
-  set_initial_bc ();
+  set_bc_in_initial_newton_guess ();
   assemble_system_rhs();
 
   double newton_residual = system_rhs.linfty_norm(); 
