@@ -2241,11 +2241,13 @@ void LaplaceProblem<dim>::integrate_difference_F_norm
 //			  solution
 //			  );
 
-	      Vector<double> tmp_solution;
-	      tmp_solution = solution;
+	       // INFO: up to deal.II 9.6.0
+	      //Vector<double> tmp_solution;
+	      //tmp_solution = solution;
 	      
 	      SolutionTransfer<dim,Vector<double> > solution_transfer (mg_dof_handler);
-	      solution_transfer.prepare_for_coarsening_and_refinement(tmp_solution);
+          // INFO: up to deal.II 9.6.0 it was tmp_solution
+	      solution_transfer.prepare_for_coarsening_and_refinement(solution);
 
 	      triangulation.refine_global (1);
  
@@ -2253,8 +2255,9 @@ void LaplaceProblem<dim>::integrate_difference_F_norm
 			<< triangulation.n_active_cells()
 			<< std::endl;
 	      setup_system();
-	      solution_transfer.interpolate(tmp_solution, solution); 
-
+          // INFO: up to deal.II 9.6.0
+	      //solution_transfer.interpolate(tmp_solution, solution); 
+            solution_transfer.interpolate(solution); 
 
 
 	    }
