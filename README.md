@@ -18,6 +18,7 @@ More information in terms of a bullet list are:
         certain terms are scaled
  - Evaluation of several norms. The most important is 
    the F-norm that is equivalent to the H1 norm for the case p=2
+ - The errors and also solvers performances can be grepped from the terminal output via grep "Errors" file_name_terminal.txt or grep "Info" file_name_terminal.txt
  - Graphical output is written in *.vtk that can be displaced by paraview
    or visit.
  - Simulations of TouWi17 using this Newton-Krylov GMG method can be
