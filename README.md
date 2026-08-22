@@ -3,7 +3,7 @@
 In this program examples from TouWi17 (SISC)
 https://epubs.siam.org/doi/abs/10.1137/16M1067792
 can be computed with a Newton-Krylov (CG) solver and geometric multigrid preconditioning.
-The program is based and tested on deal.II version 9.6.0. Building and running the program is a usual when working with deal.II tutorial steps: cmake (to build once the Makefile), afterwards make run, i.e., make debug run or make release run.
+The program is based and tested on deal.II version 9.6.0 (2024-2026) and 9.7.0 (from Aug 2026). Building and running the program is a usual when working with deal.II tutorial steps: cmake (to build once the Makefile), afterwards make run, i.e., make debug run or make release run.
 
 The base program uses p=2, which corresponds to the classical Poisson problem: Find u:\Omega\to R such that -\Delta u=f in \Omega; here on the unit square \Omega=(0,1)^2, and homogeneous Dirichlet boundary conditions, and right hand side f=-1 . Changing test cases is done towards the end after `// Defining test cases'.
 
