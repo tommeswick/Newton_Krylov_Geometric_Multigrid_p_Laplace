@@ -2219,8 +2219,8 @@ void LaplaceProblem<dim>::integrate_difference_F_norm
 	      << lower_bound_newton_residual 
 	      << std::endl;
     std::cout << "Info:  " <<  std::endl;
-    //std::cout << "Info: Cells\tDoFs\th\t\tF-norm err\tConvRate\tMin/MaxLinIter\tNewton iter" << std::endl;
-    std::cout << "Info: Cells\tDoFs\th\t\tMin/MaxLinIter\tNewton iter\tCPU time[s]" << std::endl;
+    //std::cout << "Info: Cells\tDoFs\th\t\tF-norm err\tConvRate\tMin,MaxLinIter\tNewton iter" << std::endl;
+    std::cout << "Info: Cells\tDoFs\th\t\tMin,MaxLinIter\tNewton iter\tCPU time[s]" << std::endl;
 
 
     for (unsigned int cycle=0; cycle<max_no_refinement_cycles; ++cycle)
